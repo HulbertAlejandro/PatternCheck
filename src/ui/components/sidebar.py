@@ -51,6 +51,7 @@ def show_sidebar() -> str:
 
     # Contenido de la barra lateral
     with st.sidebar:
+        st.sidebar.image("src/ui/assets/logo.png", use_container_width=True)
         st.markdown("<div class='sidebar-title'>Sistema de Validación</div>", unsafe_allow_html=True)
         st.markdown("<div class='sidebar-subtitle'>Proyecto de Lenguajes Formales</div>", unsafe_allow_html=True)
 
