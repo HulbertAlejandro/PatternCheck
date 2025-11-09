@@ -1,0 +1,33 @@
+# Entorno virtual de Python
+.venv/
+venv/
+env/
+ENV/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Archivos de Streamlit
+.streamlit/secrets.toml
+
+# Archivos del sistema
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de prueba temporales
+*.tmp
+*.log

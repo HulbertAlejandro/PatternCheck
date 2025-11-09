@@ -1,0 +1,63 @@
+=== TEXTO DE PRUEBA PARA EL ESCÁNER DE PATRONES ===
+
+Correos válidos:
+- juan.perez@example.com
+- maria_lopez@uni.edu.co
+- test.name+tag@sub-domain.co
+
+Correos inválidos:
+- usuario@@dominio.com
+- sin_arroba.com
+- prueba@dominio
+
+URLs válidas:
+- https://www.google.com
+- http://openai.com/research
+- https://sub.domain.co/path?q=data
+
+URLs inválidas:
+- www.ejemplo
+- http//sin-dos-puntos.com
+
+Teléfonos válidos:
+- +57 300 456 7890
+- +52 55 1234 5678
+- +1 (202) 555-0147
+
+Teléfonos inválidos:
+- 12345
+- +999 999 999 9999
+
+Fechas válidas:
+- 29/02/2024
+- 15-11-2025
+
+Fechas inválidas:
+- 31/02/2023
+- 99/99/9999
+
+Cédulas válidas:
+- 1032456789
+- 987654321
+
+Cédulas inválidas:
+- 0000000
+- 1234567
+
+Códigos postales válidos:
+- 110011
+- 050001
+
+Placas válidas:
+- ABC123
+- XYZ-987
+
+Contraseñas válidas:
+- Abcd1234!
+- FuertePass_9@
+
+Contraseñas inválidas:
+- password
+- 12345678
+
+=== FIN DEL DOCUMENTO ===

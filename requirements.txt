@@ -1,0 +1,24 @@
+# ---- Librerías principales del framework ----
+streamlit>=1.36.0          # Interfaz gráfica web
+pandas>=2.1.0              # Manipulación de datos en DataFrames
+
+# ---- Validación y manejo de datos ----
+phonenumbers>=8.13.0       # Validación de números telefónicos internacionales
+PyMuPDF>=1.24.1            # Extracción de texto desde archivos PDF (fitz)
+
+# ---- Utilidades del sistema ----
+typing_extensions>=4.9.0   # Tipado extendido compatible con Python <3.12
+python-dateutil>=2.8.2     # Manejo de fechas y formatos
+pytz>=2024.1               # Zonas horarias (usada indirectamente por dateutil)
+
+# ---- Exportación y almacenamiento ----
+openpyxl>=3.1.2            # Soporte de archivos Excel (CSV/XLSX)
+requests>=2.32.3           # Llamadas HTTP opcionales si se agregan futuras integraciones
+
+# ---- Logging y procesamiento ----
+loguru>=0.7.2              # Manejo avanzado de logs (para src/utils/log_utils.py si se amplía)
+tqdm>=4.66.4               # Barras de progreso (útil en escáneres grandes)
+
+# ---- Dependencias estándar usadas (sin instalación necesaria) ----
+# re, json, pathlib, dataclasses, urllib.parse, os, sys
+# Estas pertenecen a la biblioteca estándar de Python.
