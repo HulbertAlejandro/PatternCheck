@@ -118,22 +118,25 @@ def show_scanner_panel():
             summary_text = generate_summary(flat_for_summary)
             total_matches = sum(len(vals) for vals in results.values())
 
+        # Prepara el texto del resumen fuera del f-string
+        summary_html = (summary_text or "").replace("\n", "<br>")
+
         st.markdown(
-            f"""
-            <div style="
+           f"""
+           <div style="
                 background-color:rgba(255,255,255,0.05);
                 padding:10px;
                 border-radius:6px;
                 border-left:5px solid #1976D2;
                 color:#CFD8DC;
-            ">
+         ">
                 <strong>Resumen:</strong><br>
-                {summary_text.replace("\\n", "<br>")}
-                <br><br>
-                Total de coincidencias: <strong>{total_matches}</strong>
-            </div>
-            """,
-            unsafe_allow_html=True
+                {summary_html}
+               <br><br>
+               Total de coincidencias: <strong>{total_matches}</strong>
+          </div>
+         """,
+         unsafe_allow_html=True
         )
 
         # --- Exportar resultados (persistente) ---

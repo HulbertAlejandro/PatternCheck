@@ -10,6 +10,7 @@ from src.ui.main_ui import main
 if __name__ == "__main__":
     st.set_page_config(
         page_title="Sistema de Validación de Patrones",
+        page_icon=None,
         layout="wide"
     )
     main()

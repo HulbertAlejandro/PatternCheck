@@ -8,11 +8,12 @@ from src.ui.components.documentation_mode import show_documentation_mode
 
 
 def main():
-    st.set_page_config(
-        page_title="Sistema de Validación de Patrones",
-        page_icon=None,
-        layout="wide"
-    )
+    
+    # st.set_page_config(
+    #     page_title="Sistema de Validación de Patrones",
+    #     page_icon=None,
+    #     layout="wide"
+    # )
 
     # Aplicar estilos generales
     apply_custom_styles()
