@@ -15,21 +15,15 @@ ID_RULES = {
     "MX": r"^(?:[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}|[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3})$",
 }
 
-# Países donde se remueven espacios o guiones antes de validar (NO incluimos "US" para no romper SSN)
+# Países donde se remueven espacios o guiones antes de validar
 NORMALIZE_REMOVE = {"MX"}
 
-# Patrones triviales o secuenciales que deben rechazarse (solo repeticiones obvias)
+# Patrones triviales o secuenciales que deben rechazarse
 TRIVIAL_PATTERNS = {"000000000", "111111111", "222222222", "999999999"}
 
 
 # ---------- Normalización ----------
 def _normalize_id_input(id_str: str, country: str) -> str:
-    """
-    Normaliza la entrada según país.
-    - Para MX: elimina espacios y guiones (CURP/RFC no deben tener guiones).
-    - Para US: no eliminamos guiones para conservar formato posible "123-45-6789",
-      pero al comprobar trivialidad se limpia temporalmente.
-    """
     s = (id_str or "").strip().upper()
     if country in NORMALIZE_REMOVE:
         s = re.sub(r"[\s\-]", "", s)
@@ -38,27 +32,41 @@ def _normalize_id_input(id_str: str, country: str) -> str:
 
 # ---------- Detección automática ----------
 def _detect_country(id_str: str) -> Optional[str]:
-    """
-    Intenta inferir el país basándose en el formato (prueba original y versión limpia).
-    """
     if not id_str:
         return None
     original = id_str.strip().upper()
     cleaned = re.sub(r"[\s\-]", "", original)
     for code, pattern in ID_RULES.items():
-        # pruebo con la forma original (útil para US con guiones) y con la limpia
         if re.fullmatch(pattern, original) or re.fullmatch(pattern, cleaned):
             return code
     return None
 
 
 # ---------- Validadores específicos ----------
+def _is_sequential(number_str: str) -> bool:
+    """Detecta secuencias ascendentes o descendentes (e.g., 1234567 o 9876543)."""
+    if len(number_str) < 3 or not number_str.isdigit():
+        return False
+    asc = "0123456789"
+    desc = asc[::-1]
+    return number_str in asc or number_str in desc or any(
+        number_str in asc[i:] or number_str in desc[i:] for i in range(len(asc))
+    )
+
+
 def validate_co(id_norm: str) -> bool:
-    return bool(re.fullmatch(ID_RULES["CO"], id_norm))
+    """Valida cédula colombiana (7 a 10 dígitos, sin repeticiones ni secuencias)."""
+    if not re.fullmatch(ID_RULES["CO"], id_norm):
+        return False
+    # No permitir todos los dígitos iguales ni secuencias ascendentes/descendentes
+    if len(set(id_norm)) == 1 or _is_sequential(id_norm):
+        return False
+    return True
+
 
 def validate_us(id_norm: str) -> bool:
-    # acepta SSN con o sin guiones
     return bool(re.fullmatch(ID_RULES["US"], id_norm))
+
 
 def validate_mx(id_norm: str) -> bool:
     return bool(re.fullmatch(ID_RULES["MX"], id_norm))
@@ -66,10 +74,6 @@ def validate_mx(id_norm: str) -> bool:
 
 # ---------- Dispatcher principal ----------
 def validate_id(id_str: str, country: Optional[str] = None, debug: bool = False) -> ValidationResult:
-    """
-    Valida una identificación nacional según el país.
-    Si no se especifica el país, intenta detectarlo automáticamente.
-    """
     if not id_str or not id_str.strip():
         return ValidationResult(False, "lexical", ["Identificación vacía"], None)
 
@@ -110,8 +114,6 @@ def validate_id(id_str: str, country: Optional[str] = None, debug: bool = False)
             msg += f" (normalizada={s}, patrón={ID_RULES[country]})"
         return ValidationResult(False, "syntactic", [msg], None)
 
-    # devolver valor normalizado para almacenamiento (para US devolvemos la versión sin guiones para consistencia)
-    # Si quieres mantener guiones en salida, cambia p_return = s en lugar de s_clean.
     p_return = s_clean if country == "US" else s
     return ValidationResult(True, "semantic", [f"Identificación válida ({country})"], p_return)
 
@@ -119,13 +121,12 @@ def validate_id(id_str: str, country: Optional[str] = None, debug: bool = False)
 # ---------- Pruebas manuales ----------
 if __name__ == "__main__":
     tests = [
-        ("123456789", None),
-        ("123-45-6789", None),
-        ("123456789", "US"),
-        ("123-45-6789", "US"),
-        ("1032456789", None),
-        ("ABCD900101HDFXYZ01", None),
-        ("111111111", None),
+        ("1032456789", "CO"),  # ✅ válida
+        ("11111111", "CO"),    # ❌ repetitiva
+        ("12345678", "CO"),    # ❌ secuencial
+        ("87654321", "CO"),    # ❌ descendente
+        ("123-45-6789", "US"), # ✅ válida
+        ("ABCD900101HDFXYZ01", "MX"), # ✅ válida
     ]
 
     for id_str, country in tests:
